@@ -1,0 +1,32 @@
+# --- Python & Entorno Virtual ---
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+
+# --- Bases de Datos (SQLite / SQL) ---
+# Ignora cualquier base de datos creada por el seeder o la app
+*.db
+*.sqlite
+*.sqlite3
+# Si tu base de datos está en una carpeta específica, asegúrala también:
+
+
+# --- Modelos de Machine Learning ---
+# Ignora la carpeta donde se guardan los modelos entrenados (.pkl, .h5, .joblib)
+ml_models/
+*.pkl
+*.joblib
+*.h5
+
+# --- Frontend ---
+# No olvides ignorar las librerías de Node si entras en la carpeta frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# --- Sistema y Logs ---
+.DS_Store
+*.log
+.vscode/
