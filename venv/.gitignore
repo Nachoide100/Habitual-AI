@@ -1,0 +1,18 @@
+# Bases de datos (Genérico)
+*.db
+*.sqlite
+*.sqlite3
+
+# Archivos específicos por si acaso cambias el nombre
+habitos_app.db
+
+# Carpetas de datos y backend
+database/
+Backend/habitos_app.db
+Backend/*.db
+
+# Entorno virtual y Python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
