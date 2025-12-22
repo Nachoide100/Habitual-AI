@@ -1,24 +1,24 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
+import os # <--- IMPORTANTE
 
-#1. Definir el URL de la base de datos
-sqlalchemy_database_url = "sqlite:///./habitos_app.db"
+# 1. TRUCO PARA OBTENER SIEMPRE LA RUTA CORRECTA
+# Esto busca la carpeta donde está ESTE archivo (database.py)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Y une esa ruta con el nombre de la base de datos
+DB_PATH = os.path.join(BASE_DIR, "habitos_app.db")
 
-#2. Crear el engine
+# 2. Usamos la ruta absoluta
+sqlalchemy_database_url = f"sqlite:///{DB_PATH}"
+
+# 3. Crear el engine
 engine = create_engine(
     sqlalchemy_database_url, connect_args={"check_same_thread":False}
 )
 
-#3. Crear la sesión local
-SessionLocal = sessionmaker(autocommit=False, 
-                            autoflush=False, 
-                            bind=engine)
-
-
-#4. Crear la clase Base (de la que heredaran nuestros modelos)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
-#5.  Función para conectar con la base de datos
 def get_db():
     db = SessionLocal()
     try:

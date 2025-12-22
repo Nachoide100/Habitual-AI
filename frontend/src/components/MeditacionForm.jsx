@@ -1,10 +1,19 @@
 import { useState } from 'react';
 
-const MeditacionForm = () => {
+const MeditacionForm = ({ onSubmit, onCancel }) => {
   const [datos, setDatos] = useState({ minutos: '', momento: 'mañana', estres_antes: 5, estres_despues: 3 });
 
   const handleChange = (e) => setDatos({ ...datos, [e.target.name]: e.target.value });
-  const handleSubmit = (e) => { e.preventDefault(); alert(`Meditación: ${JSON.stringify(datos)}`); };
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit({
+        minutos: parseInt(datos.minutos),
+        momento: datos.momento,
+        estres_antes: parseInt(datos.estres_antes),
+        estres_despues: parseInt(datos.estres_despues)
+    });
+  };
 
   const inputStyle = "w-full border-b-2 border-gray-200 p-2 focus:border-purple-600 outline-none bg-transparent text-lg";
   const labelStyle = "block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1";

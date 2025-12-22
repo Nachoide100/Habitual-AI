@@ -1,10 +1,19 @@
 import { useState } from 'react';
 
-const FitnessForm = () => {
+const FitnessForm = ({ onSubmit, onCancel }) => {
   const [datos, setDatos] = useState({ duracion_minutos: '', distancia_km: '', intensidad: 3, tipo_ejercicio: '' });
 
   const handleChange = (e) => setDatos({ ...datos, [e.target.name]: e.target.value });
-  const handleSubmit = (e) => { e.preventDefault(); alert(`Fitness: ${JSON.stringify(datos)}`); };
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit({
+        duracion_minutos: parseInt(datos.duracion_minutos),
+        distancia_km: parseFloat(datos.distancia_km || 0),
+        intensidad: parseInt(datos.intensidad),
+        tipo_ejercicio: datos.tipo_ejercicio || 'cardio'
+    });
+  };
 
   const inputStyle = "w-full border-b-2 border-gray-200 p-2 focus:border-orange-500 outline-none bg-transparent transition-colors text-lg";
   const labelStyle = "block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1";
@@ -15,7 +24,7 @@ const FitnessForm = () => {
       
       <form onSubmit={handleSubmit} className="space-y-4 flex flex-col flex-grow">
         <div><label className={labelStyle}>Duración (min)</label><input type="number" name="duracion_minutos" className={inputStyle} onChange={handleChange} value={datos.duracion_minutos} /></div>
-        <div><label className={labelStyle}>Distancia (km)</label><input type="number" name="distancia_km" className={inputStyle} onChange={handleChange} value={datos.distancia_km} /></div>
+        <div><label className={labelStyle}>Distancia (km)</label><input type="number" step="0.1" name="distancia_km" className={inputStyle} onChange={handleChange} value={datos.distancia_km} /></div>
         
         <div>
           <label className={labelStyle}>Intensidad: {datos.intensidad}</label>

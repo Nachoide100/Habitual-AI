@@ -72,7 +72,7 @@ def crear_entrada(
     
     # 2. Comprobar frecuencia (duplicados en la misma fecha)
     fecha_a_revisar = entrada.fecha if entrada.fecha else date.today() 
-    entrada_existente = crud.seleccionar_entrada_por_fecha(db, habito_id=habito_id)
+    entrada_existente = crud.seleccionar_entrada_por_fecha(db, habito_id=habito_id, fecha_entrada=fecha_a_revisar)
     if entrada_existente:
         raise HTTPException(status_code=400,
                              detail=f"Ya has registrado una entrada para este hábito en la fecha {fecha_a_revisar}")
@@ -81,7 +81,7 @@ def crear_entrada(
     validar_entrada_datos(db_habito.tipo_habito, entrada.valor)
 
     # 4. Guardar en DB si pasa la validación
-    return crud.crear_entrada_habito(db=db, entrada=entrada, habit_id=habito_id)
+    return crud.crear_entrada_habito(db=db, entrada=entrada, habito_id=habito_id)
 
 @router.get("/entradas/{entrada_id}", response_model=schemas.HabitoEntrada)
 def leer_entrada(entrada_id: int, db: Session = Depends(get_db)):

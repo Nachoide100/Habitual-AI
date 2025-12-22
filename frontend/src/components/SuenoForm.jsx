@@ -1,13 +1,21 @@
 import { useState } from 'react';
 
-const SuenoForm = () => {
+const SuenoForm = ({ onSubmit, onCancel }) => {
   const [datos, setDatos] = useState({ horas: '', calidad: 7, madrugar: false });
 
   const handleChange = (e) => {
     const valor = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     setDatos({ ...datos, [e.target.name]: valor });
   };
-  const handleSubmit = (e) => { e.preventDefault(); alert(`Sueño: ${JSON.stringify(datos)}`); };
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit({
+        horas: parseFloat(datos.horas),
+        calidad: parseInt(datos.calidad),
+        madrugar: datos.madrugar
+    });
+  };
 
   const inputStyle = "w-full border-b-2 border-gray-200 p-2 focus:border-indigo-500 outline-none bg-transparent transition-colors text-lg";
   const labelStyle = "block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1";

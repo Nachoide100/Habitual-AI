@@ -16,8 +16,9 @@ app = FastAPI(
 
 # Configuración de seguridad para permitir que el Frontend hable con el Backend
 origins = [
-    "http://localhost:3000", # Típico puerto de React
-    "http://localhost:5173", # Típico puerto de Vite/Vue
+    "http://localhost",
+    "http://localhost:3173",
+    "*"
 ]
 
 app.add_middleware(
