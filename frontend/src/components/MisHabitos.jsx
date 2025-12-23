@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 
+// Importamos el Panel de IA
+import IAControlPanel from './IAControlPanel';
+
 // Importamos todos tus formularios
 import LecturaForm from './LecturaForm';
 import FitnessForm from './FitnessForm';
@@ -12,12 +15,29 @@ import SocialForm from './SocialForm';
 import OcioForm from './OcioForm';
 
 const MisHabitos = () => {
-  const USUARIO_ID = 1; // De momento trabajamos con el usuario 1
+  // NOTA: Si regeneraste la BD, el ID 1 existirá. Si no, usa el ID que tengas.
+  const USUARIO_ID = 1; 
 
-  const [habitos, setHabitos] = useState([]); // Lista de hábitos de la BD
-  const [habitoSeleccionado, setHabitoSeleccionado] = useState(null); // ¿Qué formulario está abierto?
+  const [habitos, setHabitos] = useState([]); 
+  const [habitoSeleccionado, setHabitoSeleccionado] = useState(null); 
 
-  // 1. CARGAR HÁBITOS DE LA API (AL INICIAR)
+  // DICCIONARIO PARA TRADUCIR CATEGORÍAS
+  const nombresBonitos = {
+    lectura: "Lectura y Aprendizaje",
+    fitness: "Ejercicio Físico",
+    sueno: "Descanso y Recuperación",
+    nutricion: "Alimentación Saludable",
+    habito_no_saludable: "Control de Vicios",
+    meditacion: "Mindfulness y Relax",
+    estado_animo: "Salud Emocional",
+    actividad_social: "Vida Social",
+    actividad_ocio: "Ocio y Hobbies",
+    ocio: "Ocio y Hobbies",
+    // Traducimos el hábito de trabajo para que tenga sentido con el form de vicios
+    habito_saludable: "Jornada Laboral (Sedentarismo)" 
+  };
+
+  // 1. CARGAR HÁBITOS DE LA API
   useEffect(() => {
     fetch(`http://127.0.0.1:8000/usuarios/${USUARIO_ID}/habitos/`)
       .then(response => response.json())
@@ -30,13 +50,11 @@ const MisHabitos = () => {
     if (!habitoSeleccionado) return;
 
     try {
-      // Llamada POST a tu API
       const response = await fetch(`http://127.0.0.1:8000/habitos/${habitoSeleccionado.id}/entradas/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        // TU SCHEMA ESPERA UN CAMPO "valor" CON EL JSON DENTRO
         body: JSON.stringify({
           valor: datosFormulario 
         })
@@ -44,7 +62,7 @@ const MisHabitos = () => {
 
       if (response.ok) {
         alert("✅ ¡Guardado correctamente!");
-        setHabitoSeleccionado(null); // Cerrar formulario
+        setHabitoSeleccionado(null); 
       } else {
         const errorData = await response.json();
         alert(`❌ Error: ${errorData.detail}`);
@@ -55,7 +73,6 @@ const MisHabitos = () => {
   };
 
   // 3. DICCIONARIO PARA ELEGIR FORMULARIO
-  // Según el "tipo_habito" que viene de la BD, elegimos qué componente pintar
   const renderizarFormulario = () => {
     if (!habitoSeleccionado) return null;
 
@@ -69,13 +86,20 @@ const MisHabitos = () => {
       case 'fitness': return <FitnessForm {...propsComunes} />;
       case 'sueno': return <SuenoForm {...propsComunes} />;
       case 'nutricion': return <NutricionForm {...propsComunes} />;
+      
       case 'habito_no_saludable': return <ViciosForm {...propsComunes} />;
       case 'meditacion': return <MeditacionForm {...propsComunes} />;
       case 'estado_animo': return <EstadoAnimoForm {...propsComunes} />;
       case 'actividad_social': return <SocialForm {...propsComunes} />;
+      
+      // TRUCO: Para 'Trabajar' (habito_saludable), usamos el form de Vicios
+      // para registrar las horas de sedentarismo.
+      case 'habito_saludable': return <ViciosForm {...propsComunes} />;
+      
       case 'actividad_ocio': 
-      case 'ocio': return <OcioForm {...propsComunes} />; // Por si en la BD se llama de una forma u otra
-      default: return <p>Formulario no disponible</p>;
+      case 'ocio': return <OcioForm {...propsComunes} />;
+      
+      default: return <p className="p-4 text-red-500">Formulario no disponible para: {habitoSeleccionado.tipo_habito}</p>;
     }
   };
 
@@ -83,34 +107,39 @@ const MisHabitos = () => {
     <div className="p-8 bg-gray-50 min-h-screen">
       <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">Mis Hábitos Diarios</h1>
 
-      {/* SI HAY UN FORMULARIO ABIERTO, LO MOSTRAMOS EN UNA VENTANA MODAL */}
+      {/* --- PANEL DE INTELIGENCIA ARTIFICIAL --- */}
+      <div className="max-w-5xl mx-auto mb-10">
+        <IAControlPanel />
+      </div>
+
+      {/* --- VENTANA MODAL (FORMULARIO) --- */}
       {habitoSeleccionado && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
-          // 1. AQUÍ ESTÁ EL TRUCO: Si haces clic en lo negro, se cierra
-          onClick={() => setHabitoSeleccionado(null)}
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 animate-fade-in"
+          onClick={() => setHabitoSeleccionado(null)} // Cierra al hacer clic fuera
         >
           <div 
-            className="w-full max-w-md"
-            // 2. IMPORTANTE: Evitamos que el clic dentro del formulario cierre la ventana
-            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-md transform transition-all scale-100"
+            onClick={(e) => e.stopPropagation()} // Evita cierre al hacer clic dentro
           >
-             {/* Aquí se pinta el formulario específico */}
              {renderizarFormulario()}
           </div>
         </div>
       )}
-      {/* LISTA DE BOTONES (Uno por cada hábito que tengas en la BD) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      {/* --- GRID DE HÁBITOS --- */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
         {habitos.map(habito => (
-          <div key={habito.id} className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex justify-between items-center">
+          <div key={habito.id} className="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-all border border-gray-100 flex flex-col justify-between h-32">
             <div>
-              <h3 className="font-bold text-gray-700">{habito.nombre}</h3>
-              <p className="text-xs text-gray-400 uppercase">{habito.tipo_habito}</p>
+              <h3 className="text-lg font-bold text-gray-800">{habito.nombre}</h3>
+              <p className="text-xs font-medium text-cyan-600 mt-1">
+                {nombresBonitos[habito.tipo_habito] || habito.tipo_habito}
+              </p>
             </div>
             <button 
               onClick={() => setHabitoSeleccionado(habito)}
-              className="bg-black text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-800"
+              className="mt-auto bg-black text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-800 transition-colors w-full"
             >
               REGISTRAR
             </button>
