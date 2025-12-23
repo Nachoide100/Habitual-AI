@@ -233,6 +233,7 @@ def predecir_perfil_usuario(db: Session, usuario_id: int):
         scaler = joblib.load(f"{MODEL_PATH}/scaler_v2.pkl")
         cols = joblib.load(f"{MODEL_PATH}/cols_v2.pkl")
         labels = joblib.load(f"{MODEL_PATH}/labels_v2.pkl")
+        metrics_data = joblib.load(f"{MODEL_PATH}/cluster_metrics_v2.pkl")
 
        
         usuario = db.query(models.Usuario).filter(models.Usuario.id == usuario_id).first()
@@ -253,15 +254,21 @@ def predecir_perfil_usuario(db: Session, usuario_id: int):
 
         consejo = generar_consejo_salud(nombre_perfil)
 
+        #Obtener media del grupo
+        media_grupo = next((item for item in metrics_data if item["perfil"] == nombre_perfil), {})
+
         return {
             "grupo_id": cluster_id,
             "perfil_ia": nombre_perfil,
             "recomendacion": consejo,
-            "metricas": metricas # Útil para gráficas en frontend
+            "metricas": metricas, # Útil para gráficas en frontend
+            "comparativa_grupo": media_grupo
         }
 
     except FileNotFoundError:
         return {"error": "Modelo no entrenado"}
+    except Exception as e:
+        return {"error": f"Erro de predicción:{str(e)}"}
 
 # Función para lectura de metrícas
 def obtener_metricas_clusters():
