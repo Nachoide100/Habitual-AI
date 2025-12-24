@@ -108,6 +108,7 @@ def crear_usuarios_y_habitos(db: Session):
         # Básicos
         mis_habitos.append(models.Habito(nombre="Dormir", frecuencia="diario", tipo_habito="sueno", usuario_id=usuario.id))
         mis_habitos.append(models.Habito(nombre="Diario Emocional", frecuencia="diario", tipo_habito="estado_animo", usuario_id=usuario.id))
+        mis_habitos.append(models.Habito(nombre="Rutina Diaria", frecuencia="diario", tipo_habito="habito_saludable", usuario_id=usuario.id))
 
         if perfil == "DEPORTISTA":
             mis_habitos.append(models.Habito(nombre="Crossfit/Gym", frecuencia="diario", tipo_habito="fitness", usuario_id=usuario.id))

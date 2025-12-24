@@ -62,7 +62,7 @@ def extraer_metricas_usuario(usuario):
                 counts["lectura_paginas"] += 1
 
             elif habito.tipo_habito == "actividad_ocio":
-                tipo = val.get("tipo_ocio", "")
+                tipo = val.get("tipo_ocio", "").lower()
                 if "videojuegos" in tipo or "televisión" in tipo:
                     datos["ocio_digital_min"] += val.get("minutos", 0)
                     counts["ocio_digital_min"] += 1
