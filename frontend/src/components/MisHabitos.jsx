@@ -1,9 +1,5 @@
 import { useState, useEffect } from 'react';
-
-// Importamos el Panel de IA
 import IAControlPanel from './IAControlPanel';
-
-// Importamos todos tus formularios
 import LecturaForm from './LecturaForm';
 import FitnessForm from './FitnessForm';
 import SuenoForm from './SuenoForm';
@@ -12,10 +8,10 @@ import ViciosForm from './ViciosForm';
 import MeditacionForm from './MeditacionForm';
 import EstadoAnimoForm from './EstadoAnimoForm';
 import SocialForm from './SocialForm';
-import OcioForm from './OcioForm';
+import OcioForm from './OcioForm'; // Importación de los formularios y archivos necesarios
+
 
 const MisHabitos = () => {
-  // NOTA: Si regeneraste la BD, el ID 1 existirá. Si no, usa el ID que tengas.
   const USUARIO_ID = 1; 
 
   const [habitos, setHabitos] = useState([]); 
@@ -37,7 +33,7 @@ const MisHabitos = () => {
     habito_saludable: "Jornada Laboral (Sedentarismo)" 
   };
 
-  // 1. CARGAR HÁBITOS DE LA API
+  // 1. CARGAR HÁBITOS DESDE EL BACKEND
   useEffect(() => {
     fetch(`http://127.0.0.1:8000/usuarios/${USUARIO_ID}/habitos/`)
       .then(response => response.json())
@@ -60,19 +56,19 @@ const MisHabitos = () => {
         })
       });
 
-      if (response.ok) {
+      if (response.ok) { // Mostrar mensaje de éxito por pantall
         alert("✅ ¡Guardado correctamente!");
         setHabitoSeleccionado(null); 
       } else {
         const errorData = await response.json();
-        alert(`❌ Error: ${errorData.detail}`);
+        alert(`❌ Error: ${errorData.detail}`); // Control de errores
       }
     } catch (error) {
       alert("Error de conexión con el servidor");
     }
   };
 
-  // 3. DICCIONARIO PARA ELEGIR FORMULARIO
+  // 3. DICCIONARIO PARA ELEGIR FORMULARIO SEGÚN EL HÁBITO
   const renderizarFormulario = () => {
     if (!habitoSeleccionado) return null;
 
@@ -81,22 +77,16 @@ const MisHabitos = () => {
       onCancel: () => setHabitoSeleccionado(null)
     };
 
-    switch (habitoSeleccionado.tipo_habito) {
+    switch (habitoSeleccionado.tipo_habito) { // Un formulario por cada tipo
       case 'lectura': return <LecturaForm {...propsComunes} />;
       case 'fitness': return <FitnessForm {...propsComunes} />;
       case 'sueno': return <SuenoForm {...propsComunes} />;
       case 'nutricion': return <NutricionForm {...propsComunes} />;
-      
       case 'habito_no_saludable': return <ViciosForm {...propsComunes} />;
       case 'meditacion': return <MeditacionForm {...propsComunes} />;
       case 'estado_animo': return <EstadoAnimoForm {...propsComunes} />;
       case 'actividad_social': return <SocialForm {...propsComunes} />;
-      
-      // TRUCO: Para 'Trabajar' (habito_saludable), usamos el form de Vicios
-      // para registrar las horas de sedentarismo.
-      case 'habito_saludable': return <ViciosForm {...propsComunes} />;
-      
-      case 'actividad_ocio': 
+      case 'habito_saludable': return <ViciosForm {...propsComunes} />; // Para regisrar sedentarismo
       case 'ocio': return <OcioForm {...propsComunes} />;
       
       default: return <p className="p-4 text-red-500">Formulario no disponible para: {habitoSeleccionado.tipo_habito}</p>;
