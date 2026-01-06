@@ -60,10 +60,11 @@ Solución al problema del "Cold Start".
 
 ## 📊 Visualización de Datos
 
-El sistema permite al usuario entender su posición en el grupo mediante gráficas comparativas directas:
+El sistema permite al usuario conocer a que perfil pertenece y entender su posición en el grupo mediante gráficas comparativas directas:
 
-*(Sustituye este enlace con una captura de tu gráfica de barras del IAControlPanel)*
-![Gráfica Comparativa](https://via.placeholder.com/600x300?text=Tu+vs+Media+del+Grupo)
+
+![Gráfica Comparativa](https://github.com/Nachoide100/Habitual-AI/blob/e69003dc5a729cab0b480ec6609d0408e594d14d/visualizations/Captura%20de%20pantalla%202026-01-06%20122855.png)
+![Gráfica Comparativa](https://github.com/Nachoide100/Habitual-AI/blob/e69003dc5a729cab0b480ec6609d0408e594d14d/visualizations/Captura%20de%20pantalla%202026-01-06%20122920.png)
 
 ---
 
@@ -75,3 +76,32 @@ Sigue estos pasos para levantar el proyecto en tu máquina:
 ```bash
 git clone [https://github.com/tu-usuario/habitual-ai.git](https://github.com/tu-usuario/habitual-ai.git)
 cd habitual-ai
+```
+### 2. Configurar el Backend
+```bash
+cd Backend
+python -m venv venv
+source venv/bin/activate  # En Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
+### 3. Poblar la base de datos
+Aquí podemos elegir cuántos usuarios y durante cuanto tiempo queremos hacer la simulación.
+```bash
+python seeder.py
+```
+### 4. Iniciar el servidor
+```bash
+uvicorn main:app --reload
+```
+### 5. Configurar el frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+
+
+
+
+
