@@ -38,7 +38,7 @@ const IAControlPanel = () => { //Definición de variables de control
 
       if (!res.ok) throw new Error(data.detail || 'Error al obtener perfil');
       
-
+      
       // 1. Definimos las claves para la gráfica
       const metricasClave = [
         { key: 'fitness_km', label: 'Fitness (Km)', color: '#10b981' },
@@ -149,7 +149,7 @@ const IAControlPanel = () => { //Definición de variables de control
               </div>
 
               {/* GRÁFICA DE BARRAS */}
-              <div className="h-64 w-full">
+              <div className="h-64 w-full" style={{ width: '100%', height: '300px', minHeight: '300px' }}>
                 <h5 className="text-sm font-bold text-gray-600 mb-4 text-center">TÚ vs PROMEDIO DEL GRUPO</h5>
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart

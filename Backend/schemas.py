@@ -149,6 +149,7 @@ class PerfilIA(BaseModel):
     perfil_ia: str
     recomendacion: str
     metricas: Dict[str, float] # Devuelve las métricas individuales del usuario
+    comparativa_grupo: Dict[str, Any] 
 
 class MensajeExito(BaseModel):
         message: str

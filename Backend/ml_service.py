@@ -159,7 +159,7 @@ def entrenar_modelo(db: Session):
     plt.scatter(centros_pca[:, 0], centros_pca[:, 1], c='red', s=200, marker='X')
     
     plt.title("Visualización de Clusters de Usuarios")
-    plt.show()
+    
     print(f"📈 Gráfico guardado en {MODEL_PATH}/clusters_visualizacion.png")
 
     score = silhouette_score(X_scaled, kmeans.labels_)
@@ -209,7 +209,7 @@ def entrenar_modelo(db: Session):
     df["perfil"] = df["cluster"].map(mapa_etiquetas)
 
     #Calculamos el promedio real agrupado por perfil
-    df_frontend = df.groupby("perfil")[frontend_cols].mean().reset_index()
+    df_frontend = df.groupby("perfil")[frontend_cols].mean().round(2).reset_index()
     
     #Convertir a diccionario
     datos_agregados = df_frontend.to_dict(orient="records")
