@@ -70,7 +70,7 @@ El sistema permite al usuario conocer a que perfil pertenece y entender su posic
 
 ## ⚙️ Instalación y Despliegue Local
 
-Sigue estos pasos para levantar el proyecto en tu máquina:
+Sigue estos pasos para visualizar el proyecto en tu ordenador: 
 
 ### 1. Clonar el repositorio
 ```bash
